@@ -1,136 +1,123 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Arch_Practic.Model
-{
-	public struct Edge
-	{
-		public char point1, point2;
-		public int cost;
+namespace Arch_Practic.Model {
+    public struct Edge {
+        public char point1, point2;
+        public int cost;
 
-		public Edge(char p1, char p2, int c)
-		{
-			point1 = char.ToUpper(p1);
-			point2 = char.ToUpper(p2);
-			cost = c;
-		}
-	}
+        public Edge(char p1, char p2, int c) {
+            point1 = char.ToUpper(p1);
+            point2 = char.ToUpper(p2);
+            cost = c;
+        }
+    }
 
-	public class Graph
-	{
-		private static Graph instance;
+    public class Graph {
+        private static Graph instance;
 
-		public int VertexNum { get { return vertexList.Count; } }
+        public int VertexNum { get { return vertexList.Count; } }
 
-		private List<char> vertexList;
+        private List<char> vertexList;
 
-		public List<Edge> MassiveEdges { get; private set; }
+        public List<Edge> MassiveEdges { get; private set; }
 
-		public void ClearGraph()
-		{
-			vertexList = new List<char>();
-			MassiveEdges = new List<Edge>();
-		}
+        public void ClearGraph() {
+            vertexList = new List<char>();
+            MassiveEdges = new List<Edge>();
+        }
 
-		public void AddEdge(Edge edge)
-		{
-			if (!MassiveEdges.Exists(x => 
-			(x.point1 == edge.point1 || x.point1 == edge.point2) && 
-			(x.point2 == edge.point1 || x.point2 == edge.point2)))
-			{
-				MassiveEdges.Add(edge);
-			}
+        public void AddEdge(Edge edge) {
+            if (!MassiveEdges.Exists(x =>
+            (x.point1 == edge.point1 || x.point1 == edge.point2) &&
+            (x.point2 == edge.point1 || x.point2 == edge.point2))) {
+                MassiveEdges.Add(edge);
+            }
 
-			UpdateVertexList();
-		}
+            UpdateVertexList();
+        }
 
-		public void RemoveEdge(char p1, char p2)
-		{
-			p1 = char.ToUpper(p1);
-			p2 = char.ToUpper(p2);
+        public void RemoveEdge(char p1, char p2) {
+            p1 = char.ToUpper(p1);
+            p2 = char.ToUpper(p2);
 
-			MassiveEdges.RemoveAll(x => (x.point1 == p1 || x.point1 == p2) &&
-					(x.point2 == p1 || x.point2 == p2));
-		}
+            MassiveEdges.RemoveAll(x => (x.point1 == p1 || x.point1 == p2) &&
+                    (x.point2 == p1 || x.point2 == p2));
+        }
 
-		public bool ExistEdge(char p1, char p2)
-		{
-			p1 = char.ToUpper(p1);
-			p2 = char.ToUpper(p2);
+        public bool ExistEdge(char p1, char p2) {
+            p1 = char.ToUpper(p1);
+            p2 = char.ToUpper(p2);
 
-			return MassiveEdges.Exists(x => (x.point1 == p1 || x.point1 == p2) &&
-					(x.point2 == p1 || x.point2 == p2));
-		}
+            return MassiveEdges.Exists(x => (x.point1 == p1 || x.point1 == p2) &&
+                    (x.point2 == p1 || x.point2 == p2));
+        }
 
 
-		public List<List<int>> GetMatrix()
-		{
-			vertexList.Sort();
+        public List<List<int>> GetMatrix() {
+            vertexList.Sort();
 
-			List<List<int>> result = new List<List<int>>(VertexNum);
-			for (int i = 0; i < VertexNum; i++)
-			{
-				result[i] = new List<int>(VertexNum);
-				result[i].ForEach(x => x = -1);
-			}
+            List<List<int>> result = new List<List<int>>(VertexNum);
+            for (int i = 0; i < VertexNum; i++) {
+                result[i] = new List<int>(VertexNum);
+                result[i].ForEach(x => x = -1);
+            }
 
-			foreach (Edge edge in MassiveEdges)
-			{
-				int index1 = vertexList.FindIndex(x => x == edge.point1);
-				int index2 = vertexList.FindIndex(x => x == edge.point2);
+            foreach (Edge edge in MassiveEdges) {
+                int index1 = vertexList.FindIndex(x => x == edge.point1);
+                int index2 = vertexList.FindIndex(x => x == edge.point2);
 
-				result[index1][index2] = edge.cost;
-				result[index2][index1] = edge.cost;
-			}
+                result[index1][index2] = edge.cost;
+                result[index2][index1] = edge.cost;
+            }
 
-			for (int i = 0; i < VertexNum; i++)
-			{
-				for (int j = 0; j < VertexNum; j++)
-				{
-					if (result[i][j] == -1)
-					{
-						result[i][j] = int.MaxValue;
-					}
-				}
-			}
+            for (int i = 0; i < VertexNum; i++) {
+                for (int j = 0; j < VertexNum; j++) {
+                    if (result[i][j] == -1) {
+                        result[i][j] = int.MaxValue;
+                    }
+                }
+            }
 
-			return result;
-		}
+            return result;
+        }
 
-		private void UpdateVertexList()
-		{
-			vertexList = new List<char>();
+        public List<char> IntToChar(List<int> vertexs) {
+            vertexList.Sort();
 
-			foreach(Edge edge in MassiveEdges)
-			{
-				if (!vertexList.Exists(x => x == edge.point1))
-				{
-					vertexList.Add(edge.point1);
-				}
+            List<char> result = new List<char>(vertexList.Count);
 
-				if (!vertexList.Exists(x => x == edge.point2))
-				{
-					vertexList.Add(edge.point2);
-				}
-			}
-		}
+            for (int i = 0; i < vertexList.Count; i++) {
+                result[i] = vertexList[vertexs[i]];
+            }
 
-		private Graph()
-		{
-			vertexList = new List<char>();
-			MassiveEdges = new List<Edge>();
-		}
+            return result;
+        }
 
-		
+        private void UpdateVertexList() {
+            vertexList = new List<char>();
 
-		public static Graph GetInstance()
-		{
-			if (instance == null)
-				instance = new Graph();
-			return instance;
-		}
-	}
+            foreach (Edge edge in MassiveEdges) {
+                if (!vertexList.Exists(x => x == edge.point1)) {
+                    vertexList.Add(edge.point1);
+                }
+
+                if (!vertexList.Exists(x => x == edge.point2)) {
+                    vertexList.Add(edge.point2);
+                }
+            }
+        }
+
+        private Graph() {
+            vertexList = new List<char>();
+            MassiveEdges = new List<Edge>();
+        }
+
+
+
+        public static Graph GetInstance() {
+            if (instance == null)
+                instance = new Graph();
+            return instance;
+        }
+    }
 }
