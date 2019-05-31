@@ -26,14 +26,17 @@ namespace Arch_Practic.Model {
             MassiveEdges = new List<Edge>();
         }
 
-        public void AddEdge(Edge edge) {
+        public bool AddEdge(Edge edge) {
             if (!MassiveEdges.Exists(x =>
             (x.point1 == edge.point1 || x.point1 == edge.point2) &&
             (x.point2 == edge.point1 || x.point2 == edge.point2))) {
                 MassiveEdges.Add(edge);
+				UpdateVertexList();
+				return true;
             }
 
             UpdateVertexList();
+			return false;
         }
 
         public void RemoveEdge(char p1, char p2) {
@@ -57,9 +60,13 @@ namespace Arch_Practic.Model {
             vertexList.Sort();
 
             List<List<int>> result = new List<List<int>>(VertexNum);
+
             for (int i = 0; i < VertexNum; i++) {
-                result[i] = new List<int>(VertexNum);
-                result[i].ForEach(x => x = -1);
+				result.Add(new List<int>(VertexNum));
+                for (int j = 0; j < VertexNum; j++)
+				{
+					result[i].Add(-1);
+				}
             }
 
             foreach (Edge edge in MassiveEdges) {
@@ -87,7 +94,7 @@ namespace Arch_Practic.Model {
             List<char> result = new List<char>(vertexList.Count);
 
             for (int i = 0; i < vertexList.Count; i++) {
-                result[i] = vertexList[vertexs[i]];
+                result.Add(vertexList[vertexs[i]]);
             }
 
             return result;

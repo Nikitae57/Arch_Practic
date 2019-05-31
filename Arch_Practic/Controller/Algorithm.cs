@@ -31,6 +31,7 @@ namespace Arch_Practic.Controller
 				{
 					min = currentLength;
 					minWay = currentWay.ToList();
+					minWay.Reverse();
 				}
 
 				currentLength -= _matrix[point][0];
@@ -62,6 +63,10 @@ namespace Arch_Practic.Controller
 
 			_matrix = matrix;
 			doneVertex = new List<bool>();
+			for (int i = 0; i < matrix.Count; i++)
+			{
+				doneVertex.Add(false);
+			}
 
 			Voyager(0);
 
