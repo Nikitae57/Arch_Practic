@@ -36,5 +36,15 @@ namespace Arch_Practic
         private void BntDeleteEdge_Click(object sender, EventArgs e) {
             controller.DeleteItemClick(tableEdges);
         }
-    }
+
+		private void btnDeleteAll_Click(object sender, EventArgs e)
+		{
+			controller.DeleteAllItems(tableEdges);
+		}
+
+		private void btnFindSolution_Click(object sender, EventArgs e)
+		{
+			controller.FindSolutionClick(minWeightValueLabel, textMinWay);
+		}
+	}
 }
